@@ -1,0 +1,10 @@
+---
+- name: STATUSINVEST
+  hosts: localhost
+  vars:
+    acoes: "bbas3"
+    fundos: "vghf11"
+  tasks:
+    - name: Import role
+      ansible.builtin.import_role:
+        name: redhat.statusinvest.getdata
