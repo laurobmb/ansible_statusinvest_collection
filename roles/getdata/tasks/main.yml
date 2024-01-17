@@ -1,0 +1,10 @@
+---
+- name: Get result
+  statusinvest:
+    statusinvest_acoes: "{{ acoes }}"
+    statusinvest_fundos: "{{ fundos }}"
+  register: greeting
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ greeting }}"
