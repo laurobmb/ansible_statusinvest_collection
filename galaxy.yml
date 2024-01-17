@@ -21,7 +21,7 @@ authors:
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
-description: your collection description
+description: Module obtains values of Brazilian shares on the website statusinvest.com.br
 
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
@@ -43,10 +43,10 @@ tags: []
 dependencies: {}
 
 # The URL of the originating SCM repository
-repository: http://example.com/repository
+repository: https://github.com/laurobmb/ansible_statusinvest_collection
 
 # The URL to any online docs
-documentation: http://docs.example.com
+documentation: https://github.com/laurobmb/ansible_statusinvest_collection/docs/
 
 # The URL to the homepage of the collection/project
 homepage: http://example.com
