@@ -6,7 +6,7 @@ ANSIBLE_METADATA = {
     'supported_by': 'community'
 }
 
-DOCUMENTATION = '''
+DOCUMENTATION = r'''
 ---
 module: statusinvest
 short_description: Module obtains values of Brazilian shares on the website statusinvest.com.br
@@ -25,7 +25,7 @@ author:
     - Lauro Gomes (@laurobmb)
 '''
 
-EXAMPLES = '''
+EXAMPLES = r'''
 # Pass in a custom name
 - name: Get result
   statusinvest:
@@ -33,7 +33,7 @@ EXAMPLES = '''
     statusinvest_fundos: vghf11
 '''
 
-RETURN = '''
+RETURN = r'''
 "acoes": {
     "DIVIDEND YIELD": "8,17",
     "NAME": "bbas3",
