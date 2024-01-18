@@ -7,7 +7,6 @@ import requests, sys
 
 def statusinvest_acoes(ACOES):
     acoes = ACOES
-    percentagem_dividendo, cotacao_atual = '0','0'
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     try:
         page = requests.get('https://statusinvest.com.br/acoes/'+acoes, headers=headers)
@@ -16,13 +15,13 @@ def statusinvest_acoes(ACOES):
         cotacao_atual = '//*[@id="main-2"]/div[2]/div/div[1]/div/div[1]/div/div[1]/strong'
         percentagem_dividendo = tree.xpath(percentagem_dividendo)[0].text
         cotacao_atual = tree.xpath(cotacao_atual)[0].text
-    except (requests.exceptions.Timeout, requests.exceptions.TooManyRedirects, requests.exceptions.RequestException) as e:
+    except:
+        percentagem_dividendo, cotacao_atual = '0','0'
         return acoes,percentagem_dividendo, cotacao_atual
     return acoes, percentagem_dividendo, cotacao_atual
 
 def statusinvest_fundos(FUNDO):
     fundo = FUNDO
-    valor_do_dividendo, cotacao_atual = '0','0'
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     try:
         page = requests.get('https://statusinvest.com.br/fundos-imobiliarios/'+fundo, headers=headers)
@@ -31,7 +30,8 @@ def statusinvest_fundos(FUNDO):
         cotacao_atual = '//*[@id="main-2"]/div[2]/div[1]/div[1]/div/div[1]/strong'
         valor_do_dividendo = tree.xpath(valor_do_dividendo)[0].text
         cotacao_atual = tree.xpath(cotacao_atual)[0].text
-    except (requests.exceptions.Timeout, requests.exceptions.TooManyRedirects, requests.exceptions.RequestException) as e:
+    except:
+        valor_do_dividendo, cotacao_atual = '0','0'
         return fundo,valor_do_dividendo, cotacao_atual
     return fundo, valor_do_dividendo, cotacao_atual
 
