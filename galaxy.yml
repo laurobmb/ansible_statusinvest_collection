@@ -1,6 +1,6 @@
 namespace: laurobmb
 name: statusinvest
-version: 1.0.19
+version: 1.0.21
 readme: README.md
 authors:
 - Lauro Gomes <lagomes@redhat.com>
@@ -12,8 +12,8 @@ tags: []
 dependencies: {}
 repository: https://github.com/laurobmb/ansible_statusinvest_collection
 documentation: https://github.com/laurobmb/ansible_statusinvest_collection/docs/
-homepage: http://example.com
-issues: http://example.com/issue/tracker
+homepage: https://github.com/laurobmb
+issues: https://github.com/laurobmb/ansible_statusinvest_collection/issues
 build_ignore:
 - '*.pyc'
 - galaxy.yml
