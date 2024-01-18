@@ -1,53 +1,5 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.0',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
-
-DOCUMENTATION = r'''
----
-module: statusinvest
-short_description: Module obtains values of Brazilian shares on the website statusinvest.com.br
-version_added: "2.8"
-description:
-  - "Module obtains values of Brazilian shares on the website statusinvest.com.br."
-options:
-    name:
-        description:
-          - Name of the person to salute. If no value is provided the default
-            value will be used.
-        required: false
-        type: str
-        default: John Doe
-author:
-    - Lauro Gomes (@laurobmb)
-'''
-
-EXAMPLES = r'''
-# Pass in a custom name
-- name: Get result
-  statusinvest:
-    statusinvest_acoes: bbas3
-    statusinvest_fundos: vghf11
-'''
-
-RETURN = r'''
-"acoes": {
-    "DIVIDEND YIELD": "8,17",
-    "NAME": "bbas3",
-    "VALOR ATUAL": "55,99"
-},
-"changed": true,
-"failed": false,
-"fii": {
-    "DIVIDEND YIELD": "13,66",
-    "NAME": "vghf11",
-    "VALOR ATUAL": "9,52"
-}
-'''
-
 import random
 from ansible.module_utils.basic import AnsibleModule
 from lxml import html
@@ -130,6 +82,54 @@ def run_module():
 def main():
     run_module()
 
+
+ANSIBLE_METADATA = {
+    'metadata_version': '1.0',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+# Documentação do módulo
+DOCUMENTATION = r'''
+---
+module: statusinvest
+short_description: Module obtains values of Brazilian shares on the website statusinvest.com.br
+version_added: "2.8"
+description:
+  - "Module obtains values of Brazilian shares on the website statusinvest.com.br."
+options:
+    name:
+        description:
+          - Name of the person to salute. If no value is provided the default
+            value will be used.
+        required: false
+        type: str
+        default: John Doe
+author:
+    - Lauro Gomes (@laurobmb)
+'''
+
+EXAMPLES = r'''
+- name: Get result
+  statusinvest:
+    statusinvest_acoes: bbas3
+    statusinvest_fundos: vghf11
+'''
+
+RETURN = r'''
+"acoes": {
+    "DIVIDEND YIELD": "8,17",
+    "NAME": "bbas3",
+    "VALOR ATUAL": "55,99"
+},
+"changed": true,
+"failed": false,
+"fii": {
+    "DIVIDEND YIELD": "13,66",
+    "NAME": "vghf11",
+    "VALOR ATUAL": "9,52"
+}
+'''
 
 if __name__ == '__main__':
     main()
