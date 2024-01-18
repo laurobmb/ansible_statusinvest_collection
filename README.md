@@ -1,11 +1,11 @@
-# Ansible Collection - redhat.statusinvest
+# Ansible Collection - laurobmb.statusinvest
 
 Documentation for the collection.
 
 ### Galaxy collection build
 > ansible-galaxy collection build
 ### Galaxy collection install from file
-> ansible-galaxy collection install redhat-statusinvest-1.0.0.tar.gz
+> ansible-galaxy collection install laurobmb-statusinvest-1.0.0.tar.gz
 ### Galaxy collection install from git
 > ansible-galaxy collection install git+https://github.com/laurobmb/ansible_statusinvest_collection.git,main
 
@@ -21,4 +21,4 @@ Documentation for the collection.
       tasks:
         - name: Import role
           ansible.builtin.import_role:
-            name: redhat.statusinvest.getdata
+            name: laurobmb.statusinvest.getdata

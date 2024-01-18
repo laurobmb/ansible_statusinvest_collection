@@ -7,4 +7,4 @@
   tasks:
     - name: Import role
       ansible.builtin.import_role:
-        name: redhat.statusinvest.getdata
+        name: laurobmb.statusinvest.getdata
