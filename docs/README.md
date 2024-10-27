@@ -11,14 +11,37 @@ Documentation for the collection.
 
 > ansible-galaxy collection install laurobmb-statusinvest-1.0.4.tar.gz -p collections/
 
-### Playbook sample
+### Playbook sample using role
     ---
     - name: STATUSINVEST
       hosts: localhost
-      vars:
-        acoes: "bbas3"
-        fundos: "vghf11"
       tasks:
-        - name: Import role
+        - name: Usando a role da collection
           ansible.builtin.import_role:
             name: laurobmb.statusinvest.getdata
+          vars:
+            acoes: 'petr4'
+            fundos: 'hgre11'
+          register: greeting
+
+        - name: Debug role
+          ansible.builtin.debug:
+            msg: "{{ greeting }}"
+
+### Playbook sample using plugin
+    ---
+    - name: STATUSINVEST
+      hosts: localhost
+      tasks:
+        - name: Usando o modulo diretamente
+          laurobmb.statusinvest.statusinvest:
+            statusinvest_acoes: "{{ acoes }}"
+            statusinvest_fundos: "{{ fundos }}"
+          register: greeting
+          vars:
+            acoes: 'bbas3'
+            fundos: 'vghf11'
+
+        - name: Debug modulo
+          ansible.builtin.debug:
+            msg: "{{ greeting }}"
