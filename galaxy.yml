@@ -1,6 +1,6 @@
 namespace: laurobmb
 name: statusinvest
-version: 1.0.24
+version: 1.0.31
 readme: README.md
 authors:
 - Lauro Gomes <lagomes@redhat.com>

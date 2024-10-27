@@ -1,0 +1,16 @@
+---
+- name: STATUSINVEST
+  hosts: localhost
+  tasks:
+    - name: Usando o modulo diretamente
+      laurobmb.statusinvest.statusinvest:
+        statusinvest_acoes: "{{ acoes }}"
+        statusinvest_fundos: "{{ fundos }}"
+      register: greeting
+      vars:
+        acoes: 'bbas3'
+        fundos: 'vghf11'
+
+    - name: Debug modulo
+      ansible.builtin.debug:
+        msg: "{{ greeting }}"

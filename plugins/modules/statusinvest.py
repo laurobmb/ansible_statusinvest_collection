@@ -5,42 +5,80 @@ from ansible.module_utils.basic import AnsibleModule
 from lxml import html
 import requests, sys
 
+DOCUMENTATION = '''
+---
+module: statusinvest
+short_description: Module obtains values of Brazilian shares on the website statusinvest.com.br
+version_added: "2.8"
+description:
+  - "Module obtains values of Brazilian shares on the website statusinvest.com.br."
+options:
+    statusinvest_acoes:
+        description:
+          - Código da ação (ticker) para obter as informações.
+        required: false
+        type: str
+        default: bbas3
+    statusinvest_fundos:
+        description:
+          - Código do fundo imobiliário (ticker) para obter as informações.
+        required: false
+        type: str
+        default: vghf11
+author:
+    - Lauro Gomes (@laurobmb)
+'''
+
+EXAMPLES = '''
+- name: Get result
+  statusinvest:
+    statusinvest_acoes: bbas3
+    statusinvest_fundos: vghf11
+'''
+
+RETURN = '''
+acoes:
+    description: Dados da ação solicitada
+    type: dict
+    returned: always
+    sample: { "NAME": "bbas3", "DIVIDEND YIELD": "8,17", "VALOR ATUAL": "55,99" }
+fii:
+    description: Dados do fundo imobiliário solicitado
+    type: dict
+    returned: always
+    sample: { "NAME": "vghf11", "DIVIDEND YIELD": "13,66", "VALOR ATUAL": "9,52" }
+changed:
+    description: Indica se houve uma alteração
+    type: bool
+    returned: always
+'''
+
 def statusinvest_acoes(ACOES):
-    acoes = ACOES
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     try:
-        page = requests.get('https://statusinvest.com.br/acoes/'+acoes, headers=headers)
+        page = requests.get(f'https://statusinvest.com.br/acoes/{ACOES}', headers=headers)
         tree = html.fromstring(page.content)
-        percentagem_dividendo = "/html/body/main/div[2]/div/div[1]/div/div[4]/div/div[1]/strong"
-        cotacao_atual = '//*[@id="main-2"]/div[2]/div/div[1]/div/div[1]/div/div[1]/strong'
-        percentagem_dividendo = tree.xpath(percentagem_dividendo)[0].text
-        cotacao_atual = tree.xpath(cotacao_atual)[0].text
-    except:
-        percentagem_dividendo, cotacao_atual = '0','0'
-        return acoes,percentagem_dividendo, cotacao_atual
-    return acoes, percentagem_dividendo, cotacao_atual
+        percentagem_dividendo = tree.xpath("/html/body/main/div[2]/div/div[1]/div/div[4]/div/div[1]/strong")[0].text
+        cotacao_atual = tree.xpath('//*[@id="main-2"]/div[2]/div/div[1]/div/div[1]/div/div[1]/strong')[0].text
+        return ACOES, percentagem_dividendo, cotacao_atual
+    except Exception:
+        return ACOES, '0', '0'
 
 def statusinvest_fundos(FUNDO):
-    fundo = FUNDO
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     try:
-        page = requests.get('https://statusinvest.com.br/fundos-imobiliarios/'+fundo, headers=headers)
+        page = requests.get(f'https://statusinvest.com.br/fundos-imobiliarios/{FUNDO}', headers=headers)
         tree = html.fromstring(page.content)
-        valor_do_dividendo = "/html/body/main/div[2]/div[1]/div[4]/div/div[1]/strong"
-        cotacao_atual = '//*[@id="main-2"]/div[2]/div[1]/div[1]/div/div[1]/strong'
-        valor_do_dividendo = tree.xpath(valor_do_dividendo)[0].text
-        cotacao_atual = tree.xpath(cotacao_atual)[0].text
-    except:
-        valor_do_dividendo, cotacao_atual = '0','0'
-        return fundo,valor_do_dividendo, cotacao_atual
-    return fundo, valor_do_dividendo, cotacao_atual
-
+        valor_do_dividendo = tree.xpath("/html/body/main/div[2]/div[1]/div[4]/div/div[1]/strong")[0].text
+        cotacao_atual = tree.xpath('//*[@id="main-2"]/div[2]/div[1]/div[1]/div/div[1]/strong')[0].text
+        return FUNDO, valor_do_dividendo, cotacao_atual
+    except Exception:
+        return FUNDO, '0', '0'
 
 def run_module():
-
     module_args = dict(
-            statusinvest_acoes=dict(type='str', default='bbas3'), #required=True),
-            statusinvest_fundos=dict(type='str', default='vghf11') #, required=True)
+        statusinvest_acoes=dict(type='str', default='bbas3'),
+        statusinvest_fundos=dict(type='str', default='vghf11')
     )
 
     result = dict(
@@ -57,79 +95,36 @@ def run_module():
     if module.check_mode:
         module.exit_json(**result)
 
-    result['acoes']['NAME'] = statusinvest_acoes(module.params['statusinvest_acoes'])[0]
-    result['acoes']['DIVIDEND YIELD'] = statusinvest_acoes(module.params['statusinvest_acoes'])[1]
-    result['acoes']['VALOR ATUAL'] = statusinvest_acoes(module.params['statusinvest_acoes'])[2]
+    # Obtendo dados de ações e fundos
+    acoes = statusinvest_acoes(module.params['statusinvest_acoes'])
+    fundos = statusinvest_fundos(module.params['statusinvest_fundos'])
 
-    result['fii']['NAME'] = statusinvest_fundos(module.params['statusinvest_fundos'])[0]
-    result['fii']['DIVIDEND YIELD'] = statusinvest_fundos(module.params['statusinvest_fundos'])[1]
-    result['fii']['VALOR ATUAL'] = statusinvest_fundos(module.params['statusinvest_fundos'])[2]
+    # Populando resultado com dados de ações e fundos
+    result['acoes'] = {
+        'NAME': acoes[0],
+        'DIVIDEND YIELD': acoes[1],
+        'VALOR ATUAL': acoes[2]
+    }
+    result['fii'] = {
+        'NAME': fundos[0],
+        'DIVIDEND YIELD': fundos[1],
+        'VALOR ATUAL': fundos[2]
+    }
 
-    if module.params['statusinvest_acoes']:
+    # Marcando como alterado se foram passados parâmetros para ações ou fundos
+    if module.params['statusinvest_acoes'] or module.params['statusinvest_fundos']:
         result['changed'] = True
-
-    if module.params['statusinvest_fundos']:
-        result['changed'] = True
-
-    if module.params['statusinvest_acoes'] == 'fail me':
-        module.fail_json(msg='You requested this to fail', **result)
-
-    if module.params['statusinvest_fundos'] == 'fail me':
-        module.fail_json(msg='You requested this to fail', **result)
 
     module.exit_json(**result)
 
 def main():
     run_module()
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.0',
     'status': ['preview'],
     'supported_by': 'community'
 }
-
-# Documentação do módulo
-DOCUMENTATION = r'''
----
-module: statusinvest
-short_description: Module obtains values of Brazilian shares on the website statusinvest.com.br
-version_added: "2.8"
-description:
-  - "Module obtains values of Brazilian shares on the website statusinvest.com.br."
-options:
-    name:
-        description:
-          - Name of the person to salute. If no value is provided the default
-            value will be used.
-        required: false
-        type: str
-        default: John Doe
-author:
-    - Lauro Gomes (@laurobmb)
-'''
-
-EXAMPLES = r'''
-- name: Get result
-  statusinvest:
-    statusinvest_acoes: bbas3
-    statusinvest_fundos: vghf11
-'''
-
-RETURN = r'''
-"acoes": {
-    "DIVIDEND YIELD": "8,17",
-    "NAME": "bbas3",
-    "VALOR ATUAL": "55,99"
-},
-"changed": true,
-"failed": false,
-"fii": {
-    "DIVIDEND YIELD": "13,66",
-    "NAME": "vghf11",
-    "VALOR ATUAL": "9,52"
-}
-'''
 
 if __name__ == '__main__':
     main()

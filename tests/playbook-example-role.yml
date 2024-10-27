@@ -1,0 +1,15 @@
+---
+- name: STATUSINVEST
+  hosts: localhost
+  tasks:
+    - name: Usando a role da collection
+      ansible.builtin.import_role:
+        name: laurobmb.statusinvest.getdata
+      vars:
+        acoes: 'petr4'
+        fundos: 'hgre11'
+      register: greeting
+
+    - name: Debug role
+      ansible.builtin.debug:
+        msg: "{{ greeting }}"
