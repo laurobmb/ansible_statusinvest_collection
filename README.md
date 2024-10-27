@@ -15,20 +15,28 @@ Documentation for the collection.
     ---
     - name: STATUSINVEST
       hosts: localhost
-      vars:
-        acoes: "itsa4"
-        fundos: "vghf11"
       tasks:
-        - name: Import role
+        - name: Usando a role da collection
           ansible.builtin.import_role:
             name: laurobmb.statusinvest.getdata
-    
-        - name: Get result
+          vars:
+            acoes: 'petr4'
+            fundos: 'hgre11'
+          register: greeting
+
+        - name: Debug role
+          ansible.builtin.debug:
+            msg: "{{ greeting }}"
+
+        - name: Usando o modulo diretamente
           laurobmb.statusinvest.statusinvest:
             statusinvest_acoes: "{{ acoes }}"
             statusinvest_fundos: "{{ fundos }}"
           register: greeting
-    
-        - name: Debug
+          vars:
+            acoes: 'bbas3'
+            fundos: 'vghf11'
+
+        - name: Debug modulo
           ansible.builtin.debug:
             msg: "{{ greeting }}"
